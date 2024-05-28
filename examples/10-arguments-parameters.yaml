@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: arguments-parameters-
+spec:
+  # invoke the whalesay template with
+  # "hello world" as the argument
+  # to the message parameter
+  entrypoint: whalesay
+  # Parameters can be passed/overridden via the argo CLI.
+  # To override the printed message, run `argo submit` with the -p option:
+  # $ argo submit examples/arguments-parameters.yaml -p message="goodbye world"
+  arguments:
+    parameters:
+      - name: message
+        value: hello world
+
+  templates:
+    - name: whalesay
+      inputs:
+        parameters:
+          - name: message # parameter declaration
+      container:
+        # run cowsay with that message input parameter as args
+        image: docker/whalesay
+        command: [cowsay]
+        args: ["{{inputs.parameters.message}}"]
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Workflow
+# metadata:
+#   generateName: global-parameters-
+# spec:
+#   entrypoint: A
+#   arguments:
+#     parameters:
+#       - name: log-level
+#         value: INFO
+
+#   templates:
+#     - name: A
+#       container:
+#         image: containerA
+#         env:
+#           - name: LOG_LEVEL
+#             value: "{{workflow.parameters.log-level}}"
+#         command: [runA]
+#     - name: B
+#       container:
+#         image: containerB
+#         env:
+#           - name: LOG_LEVEL
+#             value: "{{workflow.parameters.log-level}}"
+#         command: [runB]

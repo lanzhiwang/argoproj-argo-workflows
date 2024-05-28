@@ -1,0 +1,93 @@
+# script templates provide a way to run arbitrary snippets of code
+# in any language, to produce a output "result" via the standard out
+# of the template. Results can then be referenced using the variable,
+# {{steps.<stepname>.outputs.result}}, and used as parameter to other
+# templates, and in 'when', and 'withParam' clauses.
+# This example demonstrates the use of a bash shell script to
+# generate a random number which is printed in the next step.
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: scripts-bash-
+spec:
+  entrypoint: bash-script-example
+  templates:
+    - name: bash-script-example
+      steps:
+        - - name: generate
+            template: gen-random-int
+        - - name: print
+            template: print-message
+            arguments:
+              parameters:
+                - name: message
+                  value: "{{steps.generate.outputs.result}}"
+
+    - name: gen-random-int
+      script:
+        image: debian:9.4
+        command: [bash]
+        # 使用 script 功能还将运行脚本的标准输出分配给名为 result 的特殊输出参数。
+        # 这允许您在工作流程规范的其余部分中使用运行脚本本身的结果。在此示例中，结果仅由打印消息模板回显。
+        source: |
+          cat /dev/urandom | od -N2 -An -i | awk -v f=1 -v r=100 '{printf "%i\n", f + r * $1 / 65536}'
+
+    - name: print-message
+      inputs:
+        parameters:
+          - name: message
+      container:
+        image: alpine:latest
+        command: [sh, -c]
+        args: ["echo result was: {{inputs.parameters.message}}"]
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Workflow
+# metadata:
+#   generateName: scripts-bash-
+# spec:
+#   entrypoint: bash-script-example
+#   templates:
+#     - name: bash-script-example
+#       steps:
+#         - - name: generate
+#             template: gen-random-int-bash
+#         - - name: print
+#             template: print-message
+#             arguments:
+#               parameters:
+#                 - name: message
+#                   value: "{{steps.generate.outputs.result}}" # The result of the here-script
+
+#     - name: gen-random-int-bash
+#       script:
+#         image: debian:9.4
+#         command: [bash]
+#         source: | # Contents of the here-script
+#           cat /dev/urandom | od -N2 -An -i | awk -v f=1 -v r=100 '{printf "%i\n", f + r * $1 / 65536}'
+
+#     - name: gen-random-int-python
+#       script:
+#         image: python:alpine3.6
+#         command: [python]
+#         source: |
+#           import random
+#           i = random.randint(1, 100)
+#           print(i)
+
+#     - name: gen-random-int-javascript
+#       script:
+#         image: node:9.1-alpine
+#         command: [node]
+#         source: |
+#           var rand = Math.floor(Math.random() * 100);
+#           console.log(rand);
+
+#     - name: print-message
+#       inputs:
+#         parameters:
+#           - name: message
+#       container:
+#         image: alpine:latest
+#         command: [sh, -c]
+#         args: ["echo result was: {{inputs.parameters.message}}"]
