@@ -19,3 +19,424 @@ spec:
 #           limits:
 #             memory: 32Mi
 #             cpu: 100m
+
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Workflow
+# metadata:
+#   annotations:
+#     cpaas.io/creator: admin
+#     cpaas.io/updated-at: "2024-05-28T13:38:46Z"
+#     workflows.argoproj.io/pod-name-format: v2
+#   creationTimestamp: "2024-05-28T13:38:46Z"
+#   generateName: hello-world-
+#   generation: 5
+#   labels:
+#     workflows.argoproj.io/completed: "true"
+#     workflows.argoproj.io/phase: Succeeded
+#   name: hello-world-7xgj6
+#   namespace: argo
+#   resourceVersion: "72836"
+#   uid: 5140f7b4-61e2-4c58-acf4-5b4520b2d021
+# spec:
+#   arguments: {}
+#   entrypoint: whalesay
+#   templates:
+#     - container:
+#         args:
+#           - hello world
+#         command:
+#           - cowsay
+#         image: docker/whalesay:latest
+#         name: ""
+#         resources: {}
+#       inputs: {}
+#       metadata: {}
+#       name: whalesay
+#       outputs: {}
+# status:
+#   artifactGCStatus:
+#     notSpecified: true
+#   artifactRepositoryRef:
+#     artifactRepository:
+#       archiveLogs: true
+#       s3:
+#         accessKeySecret:
+#           key: accesskey
+#           name: my-minio-cred
+#         bucket: my-bucket
+#         endpoint: minio:9000
+#         insecure: true
+#         secretKeySecret:
+#           key: secretkey
+#           name: my-minio-cred
+#     configMap: artifact-repositories
+#     key: default-v1
+#     namespace: argo
+#   conditions:
+#     - status: "False"
+#       type: PodRunning
+#     - status: "True"
+#       type: Completed
+#   finishedAt: "2024-05-28T13:39:57Z"
+#   nodes:
+#     hello-world-7xgj6:
+#       displayName: hello-world-7xgj6
+#       finishedAt: "2024-05-28T13:39:48Z"
+#       hostNodeName: 192.168.139.43
+#       id: hello-world-7xgj6
+#       name: hello-world-7xgj6
+#       outputs:
+#         artifacts:
+#           - name: main-logs
+#             s3:
+#               key: hello-world-7xgj6/hello-world-7xgj6/main.log
+#         exitCode: "0"
+#       phase: Succeeded
+#       progress: 1/1
+#       resourcesDuration:
+#         cpu: 0
+#         memory: 27
+#       startedAt: "2024-05-28T13:38:46Z"
+#       templateName: whalesay
+#       templateScope: local/hello-world-7xgj6
+#       type: Pod
+#   phase: Succeeded
+#   progress: 1/1
+#   resourcesDuration:
+#     cpu: 0
+#     memory: 27
+#   startedAt: "2024-05-28T13:38:46Z"
+#   taskResultsCompletionStatus:
+#     hello-world-7xgj6: true
+
+# ---
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   annotations:
+#     kubectl.kubernetes.io/default-container: main
+#     workflows.argoproj.io/node-id: hello-world-7xgj6
+#     workflows.argoproj.io/node-name: hello-world-7xgj6
+#   labels:
+#     workflows.argoproj.io/completed: "true"
+#     workflows.argoproj.io/workflow: hello-world-7xgj6
+#   name: hello-world-7xgj6
+#   namespace: argo
+#   ownerReferences:
+#     - apiVersion: argoproj.io/v1alpha1
+#       blockOwnerDeletion: true
+#       controller: true
+#       kind: Workflow
+#       name: hello-world-7xgj6
+#       uid: 5140f7b4-61e2-4c58-acf4-5b4520b2d021
+# spec:
+#   containers:
+#     - command:
+#         - argoexec
+#         - wait
+#         - --loglevel
+#         - info
+#         - --log-format
+#         - text
+#       env:
+#         - name: ARGO_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.name
+#         - name: ARGO_POD_UID
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.uid
+#         - name: GODEBUG
+#           value: x509ignoreCN=0
+#         - name: ARGO_WORKFLOW_NAME
+#           value: hello-world-7xgj6
+#         - name: ARGO_WORKFLOW_UID
+#           value: 5140f7b4-61e2-4c58-acf4-5b4520b2d021
+#         - name: ARGO_CONTAINER_NAME
+#           value: wait
+#         - name: ARGO_TEMPLATE
+#           value:
+#             # {
+#             #     "name": "whalesay",
+#             #     "inputs": {},
+#             #     "outputs": {},
+#             #     "metadata": {},
+#             #     "container": {
+#             #         "name": "",
+#             #         "image": "docker/whalesay:latest",
+#             #         "command": ["cowsay"],
+#             #         "args": ["hello world"],
+#             #         "resources": {}
+#             #     },
+#             #     "archiveLocation": {
+#             #         "archiveLogs": true,
+#             #         "s3": {
+#             #             "endpoint": "minio:9000",
+#             #             "bucket": "my-bucket",
+#             #             "insecure": true,
+#             #             "accessKeySecret": {
+#             #                 "name": "my-minio-cred",
+#             #                 "key": "accesskey"
+#             #             },
+#             #             "secretKeySecret": {
+#             #                 "name": "my-minio-cred",
+#             #                 "key": "secretkey"
+#             #             },
+#             #             "key": "hello-world-7xgj6/hello-world-7xgj6"
+#             #         }
+#             #     }
+#             # }
+#             '{"name":"whalesay","inputs":{},"outputs":{},"metadata":{},"container":{"name":"","image":"docker/whalesay:latest","command":["cowsay"],"args":["hello
+#             world"],"resources":{}},"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"minio:9000","bucket":"my-bucket","insecure":true,"accessKeySecret":{"name":"my-minio-cred","key":"accesskey"},"secretKeySecret":{"name":"my-minio-cred","key":"secretkey"},"key":"hello-world-7xgj6/hello-world-7xgj6"}}}'
+#         - name: ARGO_NODE_ID
+#           value: hello-world-7xgj6
+#         - name: ARGO_INCLUDE_SCRIPT_OUTPUT
+#           value: "false"
+#         - name: ARGO_DEADLINE
+#           value: "0001-01-01T00:00:00Z"
+#         - name: ARGO_PROGRESS_FILE
+#           value: /var/run/argo/progress
+#         - name: ARGO_PROGRESS_PATCH_TICK_DURATION
+#           value: 1m0s
+#         - name: ARGO_PROGRESS_FILE_TICK_DURATION
+#           value: 3s
+#       image: quay.io/argoproj/argoexec:v3.5.7
+#       imagePullPolicy: IfNotPresent
+#       name: wait
+#       resources:
+#         requests:
+#           cpu: 10m
+#           memory: 64Mi
+#       terminationMessagePath: /dev/termination-log
+#       terminationMessagePolicy: File
+#       volumeMounts:
+#         - mountPath: /argo/secret/my-minio-cred
+#           name: my-minio-cred
+#           readOnly: true
+#         - mountPath: /tmp
+#           name: tmp-dir-argo
+#           subPath: "0"
+#         - mountPath: /var/run/argo
+#           name: var-run-argo
+#         - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#           name: kube-api-access-m46qm
+#           readOnly: true
+#     - args:
+#         - hello world
+#       command:
+#         - /var/run/argo/argoexec
+#         - emissary
+#         - --loglevel
+#         - info
+#         - --log-format
+#         - text
+#         - --
+#         - cowsay
+#       env:
+#         - name: ARGO_CONTAINER_NAME
+#           value: main
+#         - name: ARGO_TEMPLATE
+#           value:
+#             # {
+#             #     "name": "whalesay",
+#             #     "inputs": {},
+#             #     "outputs": {},
+#             #     "metadata": {},
+#             #     "container": {
+#             #         "name": "",
+#             #         "image": "docker/whalesay:latest",
+#             #         "command": ["cowsay"],
+#             #         "args": ["hello world"],
+#             #         "resources": {}
+#             #     },
+#             #     "archiveLocation": {
+#             #         "archiveLogs": true,
+#             #         "s3": {
+#             #             "endpoint": "minio:9000",
+#             #             "bucket": "my-bucket",
+#             #             "insecure": true,
+#             #             "accessKeySecret": {
+#             #                 "name": "my-minio-cred",
+#             #                 "key": "accesskey"
+#             #             },
+#             #             "secretKeySecret": {
+#             #                 "name": "my-minio-cred",
+#             #                 "key": "secretkey"
+#             #             },
+#             #             "key": "hello-world-7xgj6/hello-world-7xgj6"
+#             #         }
+#             #     }
+#             # }
+#             '{"name":"whalesay","inputs":{},"outputs":{},"metadata":{},"container":{"name":"","image":"docker/whalesay:latest","command":["cowsay"],"args":["hello
+#             world"],"resources":{}},"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"minio:9000","bucket":"my-bucket","insecure":true,"accessKeySecret":{"name":"my-minio-cred","key":"accesskey"},"secretKeySecret":{"name":"my-minio-cred","key":"secretkey"},"key":"hello-world-7xgj6/hello-world-7xgj6"}}}'
+#         - name: ARGO_NODE_ID
+#           value: hello-world-7xgj6
+#         - name: ARGO_INCLUDE_SCRIPT_OUTPUT
+#           value: "false"
+#         - name: ARGO_DEADLINE
+#           value: "0001-01-01T00:00:00Z"
+#         - name: ARGO_PROGRESS_FILE
+#           value: /var/run/argo/progress
+#         - name: ARGO_PROGRESS_PATCH_TICK_DURATION
+#           value: 1m0s
+#         - name: ARGO_PROGRESS_FILE_TICK_DURATION
+#           value: 3s
+#       image: docker/whalesay:latest
+#       imagePullPolicy: Always
+#       name: main
+#       resources: {}
+#       terminationMessagePath: /dev/termination-log
+#       terminationMessagePolicy: File
+#       volumeMounts:
+#         - mountPath: /var/run/argo
+#           name: var-run-argo
+#         - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#           name: kube-api-access-m46qm
+#           readOnly: true
+#   dnsPolicy: ClusterFirst
+#   enableServiceLinks: true
+#   initContainers:
+#     - command:
+#         - argoexec
+#         - init
+#         - --loglevel
+#         - info
+#         - --log-format
+#         - text
+#       env:
+#         - name: ARGO_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.name
+#         - name: ARGO_POD_UID
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.uid
+#         - name: GODEBUG
+#           value: x509ignoreCN=0
+#         - name: ARGO_WORKFLOW_NAME
+#           value: hello-world-7xgj6
+#         - name: ARGO_WORKFLOW_UID
+#           value: 5140f7b4-61e2-4c58-acf4-5b4520b2d021
+#         - name: ARGO_CONTAINER_NAME
+#           value: init
+#         - name: ARGO_TEMPLATE
+#           value:
+#             # {
+#             #     "name": "whalesay",
+#             #     "inputs": {},
+#             #     "outputs": {},
+#             #     "metadata": {},
+#             #     "container": {
+#             #         "name": "",
+#             #         "image": "docker/whalesay:latest",
+#             #         "command": ["cowsay"],
+#             #         "args": ["hello world"],
+#             #         "resources": {}
+#             #     },
+#             #     "archiveLocation": {
+#             #         "archiveLogs": true,
+#             #         "s3": {
+#             #             "endpoint": "minio:9000",
+#             #             "bucket": "my-bucket",
+#             #             "insecure": true,
+#             #             "accessKeySecret": {
+#             #                 "name": "my-minio-cred",
+#             #                 "key": "accesskey"
+#             #             },
+#             #             "secretKeySecret": {
+#             #                 "name": "my-minio-cred",
+#             #                 "key": "secretkey"
+#             #             },
+#             #             "key": "hello-world-7xgj6/hello-world-7xgj6"
+#             #         }
+#             #     }
+#             # }
+#             '{"name":"whalesay","inputs":{},"outputs":{},"metadata":{},"container":{"name":"","image":"docker/whalesay:latest","command":["cowsay"],"args":["hello
+#             world"],"resources":{}},"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"minio:9000","bucket":"my-bucket","insecure":true,"accessKeySecret":{"name":"my-minio-cred","key":"accesskey"},"secretKeySecret":{"name":"my-minio-cred","key":"secretkey"},"key":"hello-world-7xgj6/hello-world-7xgj6"}}}'
+#         - name: ARGO_NODE_ID
+#           value: hello-world-7xgj6
+#         - name: ARGO_INCLUDE_SCRIPT_OUTPUT
+#           value: "false"
+#         - name: ARGO_DEADLINE
+#           value: "0001-01-01T00:00:00Z"
+#         - name: ARGO_PROGRESS_FILE
+#           value: /var/run/argo/progress
+#         - name: ARGO_PROGRESS_PATCH_TICK_DURATION
+#           value: 1m0s
+#         - name: ARGO_PROGRESS_FILE_TICK_DURATION
+#           value: 3s
+#       image: quay.io/argoproj/argoexec:v3.5.7
+#       imagePullPolicy: IfNotPresent
+#       name: init
+#       resources:
+#         requests:
+#           cpu: 10m
+#           memory: 64Mi
+#       terminationMessagePath: /dev/termination-log
+#       terminationMessagePolicy: File
+#       volumeMounts:
+#         - mountPath: /argo/secret/my-minio-cred
+#           name: my-minio-cred
+#           readOnly: true
+#         - mountPath: /var/run/argo
+#           name: var-run-argo
+#         - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#           name: kube-api-access-m46qm
+#           readOnly: true
+#   nodeName: 192.168.139.43
+#   preemptionPolicy: PreemptLowerPriority
+#   priority: 0
+#   restartPolicy: Never
+#   schedulerName: default-scheduler
+#   securityContext: {}
+#   serviceAccount: default
+#   serviceAccountName: default
+#   terminationGracePeriodSeconds: 30
+#   tolerations:
+#     - effect: NoExecute
+#       key: node.kubernetes.io/not-ready
+#       operator: Exists
+#       tolerationSeconds: 30
+#     - effect: NoExecute
+#       key: node.kubernetes.io/unreachable
+#       operator: Exists
+#       tolerationSeconds: 30
+#   volumes:
+#     - emptyDir: {}
+#       name: var-run-argo
+#     - emptyDir: {}
+#       name: tmp-dir-argo
+#     - name: my-minio-cred
+#       secret:
+#         defaultMode: 420
+#         items:
+#           - key: accesskey
+#             path: accesskey
+#           - key: secretkey
+#             path: secretkey
+#         secretName: my-minio-cred
+#     - name: kube-api-access-m46qm
+#       projected:
+#         defaultMode: 420
+#         sources:
+#           - serviceAccountToken:
+#               expirationSeconds: 3607
+#               path: token
+#           - configMap:
+#               items:
+#                 - key: ca.crt
+#                   path: ca.crt
+#               name: kube-root-ca.crt
+#           - downwardAPI:
+#               items:
+#                 - fieldRef:
+#                     apiVersion: v1
+#                     fieldPath: metadata.namespace
+#                   path: namespace

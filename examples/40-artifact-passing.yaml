@@ -93,3 +93,940 @@ spec:
 #             # no compression (also accepts the standard gzip 1 to 9 values)
 #             compressionLevel: 0
 # <... snipped ...>
+
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Workflow
+# metadata:
+#   annotations:
+#     cpaas.io/creator: admin
+#     cpaas.io/updated-at: "2024-05-28T13:51:04Z"
+#     workflows.argoproj.io/pod-name-format: v2
+#   creationTimestamp: "2024-05-28T13:51:04Z"
+#   generateName: artifact-passing-
+#   generation: 6
+#   labels:
+#     workflows.argoproj.io/completed: "true"
+#     workflows.argoproj.io/phase: Succeeded
+#   name: artifact-passing-d8khj
+#   namespace: argo
+# spec:
+#   arguments: {}
+#   entrypoint: artifact-example
+#   templates:
+#     - inputs: {}
+#       metadata: {}
+#       name: artifact-example
+#       outputs: {}
+#       steps:
+#         - - arguments: {}
+#             name: generate-artifact
+#             template: whalesay
+#         - - arguments:
+#               artifacts:
+#                 - from: "{{steps.generate-artifact.outputs.artifacts.hello-art}}"
+#                   name: message
+#             name: consume-artifact
+#             template: print-message
+#     - container:
+#         args:
+#           - sleep 1; cowsay hello world | tee /tmp/hello_world.txt
+#         command:
+#           - sh
+#           - -c
+#         image: docker/whalesay:latest
+#         name: ""
+#         resources: {}
+#       inputs: {}
+#       metadata: {}
+#       name: whalesay
+#       outputs:
+#         artifacts:
+#           - name: hello-art
+#             path: /tmp/hello_world.txt
+#     - container:
+#         args:
+#           - cat /tmp/message
+#         command:
+#           - sh
+#           - -c
+#         image: alpine:latest
+#         name: ""
+#         resources: {}
+#       inputs:
+#         artifacts:
+#           - name: message
+#             path: /tmp/message
+#       metadata: {}
+#       name: print-message
+#       outputs: {}
+# status:
+#   artifactGCStatus:
+#     notSpecified: true
+#   artifactRepositoryRef:
+#     artifactRepository:
+#       archiveLogs: true
+#       s3:
+#         accessKeySecret:
+#           key: accesskey
+#           name: my-minio-cred
+#         bucket: my-bucket
+#         endpoint: minio:9000
+#         insecure: true
+#         secretKeySecret:
+#           key: secretkey
+#           name: my-minio-cred
+#     configMap: artifact-repositories
+#     key: default-v1
+#     namespace: argo
+#   conditions:
+#     - status: "False"
+#       type: PodRunning
+#     - status: "True"
+#       type: Completed
+#   finishedAt: "2024-05-28T13:51:52Z"
+#   nodes:
+#     artifact-passing-d8khj:
+#       children:
+#         - artifact-passing-d8khj-3561814179
+#       displayName: artifact-passing-d8khj
+#       finishedAt: "2024-05-28T13:51:52Z"
+#       id: artifact-passing-d8khj
+#       name: artifact-passing-d8khj
+#       outboundNodes:
+#         - artifact-passing-d8khj-3278273695
+#       phase: Succeeded
+#       progress: 2/2
+#       resourcesDuration:
+#         cpu: 0
+#         memory: 19
+#       startedAt: "2024-05-28T13:51:04Z"
+#       templateName: artifact-example
+#       templateScope: local/artifact-passing-d8khj
+#       type: Steps
+#     artifact-passing-d8khj-3278273695:
+#       boundaryID: artifact-passing-d8khj
+#       displayName: consume-artifact
+#       finishedAt: "2024-05-28T13:51:43Z"
+#       hostNodeName: 192.168.137.184
+#       id: artifact-passing-d8khj-3278273695
+#       inputs:
+#         artifacts:
+#           - name: message
+#             path: /tmp/message
+#             s3:
+#               key: artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897/hello-art.tgz
+#       name: artifact-passing-d8khj[1].consume-artifact
+#       outputs:
+#         artifacts:
+#           - name: main-logs
+#             s3:
+#               key: artifact-passing-d8khj/artifact-passing-d8khj-print-message-3278273695/main.log
+#         exitCode: "0"
+#       phase: Succeeded
+#       progress: 1/1
+#       resourcesDuration:
+#         cpu: 0
+#         memory: 11
+#       startedAt: "2024-05-28T13:51:24Z"
+#       templateName: print-message
+#       templateScope: local/artifact-passing-d8khj
+#       type: Pod
+#     artifact-passing-d8khj-3561814179:
+#       boundaryID: artifact-passing-d8khj
+#       children:
+#         - artifact-passing-d8khj-3762573897
+#       displayName: "[0]"
+#       finishedAt: "2024-05-28T13:51:24Z"
+#       id: artifact-passing-d8khj-3561814179
+#       name: artifact-passing-d8khj[0]
+#       nodeFlag: {}
+#       phase: Succeeded
+#       progress: 2/2
+#       resourcesDuration:
+#         cpu: 0
+#         memory: 19
+#       startedAt: "2024-05-28T13:51:04Z"
+#       templateScope: local/artifact-passing-d8khj
+#       type: StepGroup
+#     artifact-passing-d8khj-3629071750:
+#       boundaryID: artifact-passing-d8khj
+#       children:
+#         - artifact-passing-d8khj-3278273695
+#       displayName: "[1]"
+#       finishedAt: "2024-05-28T13:51:52Z"
+#       id: artifact-passing-d8khj-3629071750
+#       name: artifact-passing-d8khj[1]
+#       nodeFlag: {}
+#       phase: Succeeded
+#       progress: 1/1
+#       resourcesDuration:
+#         cpu: 0
+#         memory: 11
+#       startedAt: "2024-05-28T13:51:24Z"
+#       templateScope: local/artifact-passing-d8khj
+#       type: StepGroup
+#     artifact-passing-d8khj-3762573897:
+#       boundaryID: artifact-passing-d8khj
+#       children:
+#         - artifact-passing-d8khj-3629071750
+#       displayName: generate-artifact
+#       finishedAt: "2024-05-28T13:51:17Z"
+#       hostNodeName: 192.168.137.184
+#       id: artifact-passing-d8khj-3762573897
+#       name: artifact-passing-d8khj[0].generate-artifact
+#       outputs:
+#         artifacts:
+#           - name: hello-art
+#             path: /tmp/hello_world.txt
+#             s3:
+#               key: artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897/hello-art.tgz
+#           - name: main-logs
+#             s3:
+#               key: artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897/main.log
+#         exitCode: "0"
+#       phase: Succeeded
+#       progress: 1/1
+#       resourcesDuration:
+#         cpu: 0
+#         memory: 8
+#       startedAt: "2024-05-28T13:51:04Z"
+#       templateName: whalesay
+#       templateScope: local/artifact-passing-d8khj
+#       type: Pod
+#   phase: Succeeded
+#   progress: 2/2
+#   resourcesDuration:
+#     cpu: 0
+#     memory: 19
+#   startedAt: "2024-05-28T13:51:04Z"
+#   taskResultsCompletionStatus:
+#     artifact-passing-d8khj-3278273695: true
+#     artifact-passing-d8khj-3762573897: true
+# ---
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   annotations:
+#     kubectl.kubernetes.io/default-container: main
+#     workflows.argoproj.io/node-id: artifact-passing-d8khj-3762573897
+#     workflows.argoproj.io/node-name: artifact-passing-d8khj[0].generate-artifact
+#   creationTimestamp: "2024-05-28T13:51:04Z"
+#   labels:
+#     workflows.argoproj.io/completed: "true"
+#     workflows.argoproj.io/workflow: artifact-passing-d8khj
+#   name: artifact-passing-d8khj-whalesay-3762573897
+#   namespace: argo
+#   ownerReferences:
+#     - apiVersion: argoproj.io/v1alpha1
+#       blockOwnerDeletion: true
+#       controller: true
+#       kind: Workflow
+#       name: artifact-passing-d8khj
+#       uid: 4945a5dc-36e3-4a84-a86f-d31a94228c21
+#   resourceVersion: "77134"
+#   uid: 0af9ccf5-7c61-4365-8d0e-754de7a85a3a
+# spec:
+#   containers:
+#     - command:
+#         - argoexec
+#         - wait
+#         - --loglevel
+#         - info
+#         - --log-format
+#         - text
+#       env:
+#         - name: ARGO_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.name
+#         - name: ARGO_POD_UID
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.uid
+#         - name: GODEBUG
+#           value: x509ignoreCN=0
+#         - name: ARGO_WORKFLOW_NAME
+#           value: artifact-passing-d8khj
+#         - name: ARGO_WORKFLOW_UID
+#           value: 4945a5dc-36e3-4a84-a86f-d31a94228c21
+#         - name: ARGO_CONTAINER_NAME
+#           value: wait
+#         - name: ARGO_TEMPLATE
+#           # {
+#           #     "name":"whalesay",
+#           #     "inputs":{},
+#           #     "outputs":{
+#           #         "artifacts":[
+#           #             {
+#           #                 "name":"hello-art",
+#           #                 "path":"/tmp/hello_world.txt"
+#           #             }
+#           #         ]
+#           #     },
+#           #     "metadata":{},
+#           #     "container":{
+#           #         "name":"",
+#           #         "image":"docker/whalesay:latest",
+#           #         "command":["sh","-c"],
+#           #         "args":["sleep 1; cowsay hello world | tee /tmp/hello_world.txt"],
+#           #         "resources":{}
+#           #     },
+#           #     "archiveLocation":{
+#           #         "archiveLogs":true,
+#           #         "s3":{
+#           #             "endpoint":"minio:9000",
+#           #             "bucket":"my-bucket",
+#           #             "insecure":true,
+#           #             "accessKeySecret":{
+#           #                 "name":"my-minio-cred",
+#           #                 "key":"accesskey"
+#           #             },
+#           #             "secretKeySecret":{
+#           #                 "name":"my-minio-cred",
+#           #                 "key":"secretkey"
+#           #             },
+#           #             "key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897"
+#           #         }
+#           #     }
+#           # }
+#           value:
+#             '{"name":"whalesay","inputs":{},"outputs":{"artifacts":[{"name":"hello-art","path":"/tmp/hello_world.txt"}]},"metadata":{},"container":{"name":"","image":"docker/whalesay:latest","command":["sh","-c"],"args":["sleep
+#             1; cowsay hello world | tee /tmp/hello_world.txt"],"resources":{}},"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"minio:9000","bucket":"my-bucket","insecure":true,"accessKeySecret":{"name":"my-minio-cred","key":"accesskey"},"secretKeySecret":{"name":"my-minio-cred","key":"secretkey"},"key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897"}}}'
+#         - name: ARGO_NODE_ID
+#           value: artifact-passing-d8khj-3762573897
+#         - name: ARGO_INCLUDE_SCRIPT_OUTPUT
+#           value: "false"
+#         - name: ARGO_DEADLINE
+#           value: "0001-01-01T00:00:00Z"
+#         - name: ARGO_PROGRESS_FILE
+#           value: /var/run/argo/progress
+#         - name: ARGO_PROGRESS_PATCH_TICK_DURATION
+#           value: 1m0s
+#         - name: ARGO_PROGRESS_FILE_TICK_DURATION
+#           value: 3s
+#       image: quay.io/argoproj/argoexec:v3.5.7
+#       imagePullPolicy: IfNotPresent
+#       name: wait
+#       resources:
+#         requests:
+#           cpu: 10m
+#           memory: 64Mi
+#       terminationMessagePath: /dev/termination-log
+#       terminationMessagePolicy: File
+#       volumeMounts:
+#         - mountPath: /argo/secret/my-minio-cred
+#           name: my-minio-cred
+#           readOnly: true
+#         - mountPath: /tmp
+#           name: tmp-dir-argo
+#           subPath: "0"
+#         - mountPath: /var/run/argo
+#           name: var-run-argo
+#         - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#           name: kube-api-access-lqgnz
+#           readOnly: true
+#     - args:
+#         - sleep 1; cowsay hello world | tee /tmp/hello_world.txt
+#       command:
+#         - /var/run/argo/argoexec
+#         - emissary
+#         - --loglevel
+#         - info
+#         - --log-format
+#         - text
+#         - --
+#         - sh
+#         - -c
+#       env:
+#         - name: ARGO_CONTAINER_NAME
+#           value: main
+#         - name: ARGO_TEMPLATE
+#           # {
+#           #     "name":"whalesay",
+#           #     "inputs":{},
+#           #     "outputs":{
+#           #         "artifacts":[
+#           #             {
+#           #                 "name":"hello-art",
+#           #                 "path":"/tmp/hello_world.txt"
+#           #             }
+#           #         ]
+#           #     },
+#           #     "metadata":{},
+#           #     "container":{
+#           #         "name":"",
+#           #         "image":"docker/whalesay:latest",
+#           #         "command":["sh","-c"],
+#           #         "args":["sleep 1; cowsay hello world | tee /tmp/hello_world.txt"],
+#           #         "resources":{}
+#           #     },
+#           #     "archiveLocation":{
+#           #         "archiveLogs":true,
+#           #         "s3":{
+#           #             "endpoint":"minio:9000",
+#           #             "bucket":"my-bucket",
+#           #             "insecure":true,
+#           #             "accessKeySecret":{
+#           #                 "name":"my-minio-cred",
+#           #                 "key":"accesskey"
+#           #             },
+#           #             "secretKeySecret":{
+#           #                 "name":"my-minio-cred",
+#           #                 "key":"secretkey"
+#           #             },
+#           #             "key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897"
+#           #         }
+#           #     }
+#           # }
+#           value:
+#             '{"name":"whalesay","inputs":{},"outputs":{"artifacts":[{"name":"hello-art","path":"/tmp/hello_world.txt"}]},"metadata":{},"container":{"name":"","image":"docker/whalesay:latest","command":["sh","-c"],"args":["sleep
+#             1; cowsay hello world | tee /tmp/hello_world.txt"],"resources":{}},"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"minio:9000","bucket":"my-bucket","insecure":true,"accessKeySecret":{"name":"my-minio-cred","key":"accesskey"},"secretKeySecret":{"name":"my-minio-cred","key":"secretkey"},"key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897"}}}'
+#         - name: ARGO_NODE_ID
+#           value: artifact-passing-d8khj-3762573897
+#         - name: ARGO_INCLUDE_SCRIPT_OUTPUT
+#           value: "false"
+#         - name: ARGO_DEADLINE
+#           value: "0001-01-01T00:00:00Z"
+#         - name: ARGO_PROGRESS_FILE
+#           value: /var/run/argo/progress
+#         - name: ARGO_PROGRESS_PATCH_TICK_DURATION
+#           value: 1m0s
+#         - name: ARGO_PROGRESS_FILE_TICK_DURATION
+#           value: 3s
+#       image: docker/whalesay:latest
+#       imagePullPolicy: Always
+#       name: main
+#       resources: {}
+#       terminationMessagePath: /dev/termination-log
+#       terminationMessagePolicy: File
+#       volumeMounts:
+#         - mountPath: /var/run/argo
+#           name: var-run-argo
+#         - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#           name: kube-api-access-lqgnz
+#           readOnly: true
+#   dnsPolicy: ClusterFirst
+#   enableServiceLinks: true
+#   initContainers:
+#     - command:
+#         - argoexec
+#         - init
+#         - --loglevel
+#         - info
+#         - --log-format
+#         - text
+#       env:
+#         - name: ARGO_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.name
+#         - name: ARGO_POD_UID
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.uid
+#         - name: GODEBUG
+#           value: x509ignoreCN=0
+#         - name: ARGO_WORKFLOW_NAME
+#           value: artifact-passing-d8khj
+#         - name: ARGO_WORKFLOW_UID
+#           value: 4945a5dc-36e3-4a84-a86f-d31a94228c21
+#         - name: ARGO_CONTAINER_NAME
+#           value: init
+#         - name: ARGO_TEMPLATE
+#           # {
+#           #     "name":"whalesay",
+#           #     "inputs":{},
+#           #     "outputs":{
+#           #         "artifacts":[
+#           #             {
+#           #                 "name":"hello-art",
+#           #                 "path":"/tmp/hello_world.txt"
+#           #             }
+#           #         ]
+#           #     },
+#           #     "metadata":{},
+#           #     "container":{
+#           #         "name":"",
+#           #         "image":"docker/whalesay:latest",
+#           #         "command":["sh","-c"],
+#           #         "args":["sleep 1; cowsay hello world | tee /tmp/hello_world.txt"],
+#           #         "resources":{}
+#           #     },
+#           #     "archiveLocation":{
+#           #         "archiveLogs":true,
+#           #         "s3":{
+#           #             "endpoint":"minio:9000",
+#           #             "bucket":"my-bucket",
+#           #             "insecure":true,
+#           #             "accessKeySecret":{
+#           #                 "name":"my-minio-cred",
+#           #                 "key":"accesskey"
+#           #             },
+#           #             "secretKeySecret":{
+#           #                 "name":"my-minio-cred",
+#           #                 "key":"secretkey"
+#           #             },
+#           #             "key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897"
+#           #         }
+#           #     }
+#           # }
+#           value:
+#             '{"name":"whalesay","inputs":{},"outputs":{"artifacts":[{"name":"hello-art","path":"/tmp/hello_world.txt"}]},"metadata":{},"container":{"name":"","image":"docker/whalesay:latest","command":["sh","-c"],"args":["sleep
+#             1; cowsay hello world | tee /tmp/hello_world.txt"],"resources":{}},"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"minio:9000","bucket":"my-bucket","insecure":true,"accessKeySecret":{"name":"my-minio-cred","key":"accesskey"},"secretKeySecret":{"name":"my-minio-cred","key":"secretkey"},"key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897"}}}'
+#         - name: ARGO_NODE_ID
+#           value: artifact-passing-d8khj-3762573897
+#         - name: ARGO_INCLUDE_SCRIPT_OUTPUT
+#           value: "false"
+#         - name: ARGO_DEADLINE
+#           value: "0001-01-01T00:00:00Z"
+#         - name: ARGO_PROGRESS_FILE
+#           value: /var/run/argo/progress
+#         - name: ARGO_PROGRESS_PATCH_TICK_DURATION
+#           value: 1m0s
+#         - name: ARGO_PROGRESS_FILE_TICK_DURATION
+#           value: 3s
+#       image: quay.io/argoproj/argoexec:v3.5.7
+#       imagePullPolicy: IfNotPresent
+#       name: init
+#       resources:
+#         requests:
+#           cpu: 10m
+#           memory: 64Mi
+#       terminationMessagePath: /dev/termination-log
+#       terminationMessagePolicy: File
+#       volumeMounts:
+#         - mountPath: /argo/secret/my-minio-cred
+#           name: my-minio-cred
+#           readOnly: true
+#         - mountPath: /var/run/argo
+#           name: var-run-argo
+#         - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#           name: kube-api-access-lqgnz
+#           readOnly: true
+#   nodeName: 192.168.137.184
+#   preemptionPolicy: PreemptLowerPriority
+#   priority: 0
+#   restartPolicy: Never
+#   schedulerName: default-scheduler
+#   securityContext: {}
+#   serviceAccount: default
+#   serviceAccountName: default
+#   terminationGracePeriodSeconds: 30
+#   tolerations:
+#     - effect: NoExecute
+#       key: node.kubernetes.io/not-ready
+#       operator: Exists
+#       tolerationSeconds: 30
+#     - effect: NoExecute
+#       key: node.kubernetes.io/unreachable
+#       operator: Exists
+#       tolerationSeconds: 30
+#   volumes:
+#     - emptyDir: {}
+#       name: var-run-argo
+#     - emptyDir: {}
+#       name: tmp-dir-argo
+#     - name: my-minio-cred
+#       secret:
+#         defaultMode: 420
+#         items:
+#           - key: accesskey
+#             path: accesskey
+#           - key: secretkey
+#             path: secretkey
+#         secretName: my-minio-cred
+#     - name: kube-api-access-lqgnz
+#       projected:
+#         defaultMode: 420
+#         sources:
+#           - serviceAccountToken:
+#               expirationSeconds: 3607
+#               path: token
+#           - configMap:
+#               items:
+#                 - key: ca.crt
+#                   path: ca.crt
+#               name: kube-root-ca.crt
+#           - downwardAPI:
+#               items:
+#                 - fieldRef:
+#                     apiVersion: v1
+#                     fieldPath: metadata.namespace
+#                   path: namespace
+# ---
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   annotations:
+#     kubectl.kubernetes.io/default-container: main
+#     workflows.argoproj.io/node-id: artifact-passing-d8khj-3278273695
+#     workflows.argoproj.io/node-name: artifact-passing-d8khj[1].consume-artifact
+#   creationTimestamp: "2024-05-28T13:51:24Z"
+#   labels:
+#     workflows.argoproj.io/completed: "true"
+#     workflows.argoproj.io/workflow: artifact-passing-d8khj
+#   name: artifact-passing-d8khj-print-message-3278273695
+#   namespace: argo
+#   ownerReferences:
+#     - apiVersion: argoproj.io/v1alpha1
+#       blockOwnerDeletion: true
+#       controller: true
+#       kind: Workflow
+#       name: artifact-passing-d8khj
+#       uid: 4945a5dc-36e3-4a84-a86f-d31a94228c21
+# spec:
+#   containers:
+#     - command:
+#         - argoexec
+#         - wait
+#         - --loglevel
+#         - info
+#         - --log-format
+#         - text
+#       env:
+#         - name: ARGO_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.name
+#         - name: ARGO_POD_UID
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.uid
+#         - name: GODEBUG
+#           value: x509ignoreCN=0
+#         - name: ARGO_WORKFLOW_NAME
+#           value: artifact-passing-d8khj
+#         - name: ARGO_WORKFLOW_UID
+#           value: 4945a5dc-36e3-4a84-a86f-d31a94228c21
+#         - name: ARGO_CONTAINER_NAME
+#           value: wait
+#         - name: ARGO_TEMPLATE
+#           value:
+#             # {
+#             #     "name":"print-message",
+#             #     "inputs":{
+#             #         "artifacts":[
+#             #             {
+#             #                 "name":"message",
+#             #                 "path":"/tmp/message",
+#             #                 "s3":{"
+#             #                     key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897/hello-art.tgz"
+#             #                 }
+#             #             }
+#             #         ]
+#             #     },
+#             #     "outputs":{},
+#             #     "metadata":{},
+#             #     "container":{
+#             #         "name":"",
+#             #         "image":"alpine:latest",
+#             #         "command":["sh","-c"],
+#             #         "args":["cat /tmp/message"],
+#             #         "resources":{}
+#             #     },
+#             #     "archiveLocation":{
+#             #         "archiveLogs":true,
+#             #         "s3":{
+#             #             "endpoint":"minio:9000",
+#             #             "bucket":"my-bucket",
+#             #             "insecure":true,
+#             #             "accessKeySecret":{
+#             #                 "name":"my-minio-cred",
+#             #                 "key":"accesskey"
+#             #             },
+#             #             "secretKeySecret":{
+#             #                 "name":"my-minio-cred",
+#             #                 "key":"secretkey"
+#             #             },
+#             #             "key":"artifact-passing-d8khj/artifact-passing-d8khj-print-message-3278273695"
+#             #         }
+#             #     }
+#             # }
+#             '{"name":"print-message","inputs":{"artifacts":[{"name":"message","path":"/tmp/message","s3":{"key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897/hello-art.tgz"}}]},"outputs":{},"metadata":{},"container":{"name":"","image":"alpine:latest","command":["sh","-c"],"args":["cat
+#             /tmp/message"],"resources":{}},"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"minio:9000","bucket":"my-bucket","insecure":true,"accessKeySecret":{"name":"my-minio-cred","key":"accesskey"},"secretKeySecret":{"name":"my-minio-cred","key":"secretkey"},"key":"artifact-passing-d8khj/artifact-passing-d8khj-print-message-3278273695"}}}'
+#         - name: ARGO_NODE_ID
+#           value: artifact-passing-d8khj-3278273695
+#         - name: ARGO_INCLUDE_SCRIPT_OUTPUT
+#           value: "false"
+#         - name: ARGO_DEADLINE
+#           value: "0001-01-01T00:00:00Z"
+#         - name: ARGO_PROGRESS_FILE
+#           value: /var/run/argo/progress
+#         - name: ARGO_PROGRESS_PATCH_TICK_DURATION
+#           value: 1m0s
+#         - name: ARGO_PROGRESS_FILE_TICK_DURATION
+#           value: 3s
+#       image: quay.io/argoproj/argoexec:v3.5.7
+#       imagePullPolicy: IfNotPresent
+#       name: wait
+#       resources:
+#         requests:
+#           cpu: 10m
+#           memory: 64Mi
+#       terminationMessagePath: /dev/termination-log
+#       terminationMessagePolicy: File
+#       volumeMounts:
+#         - mountPath: /argo/secret/my-minio-cred
+#           name: my-minio-cred
+#           readOnly: true
+#         - mountPath: /mainctrfs/tmp/message
+#           name: input-artifacts
+#           subPath: message
+#         - mountPath: /tmp
+#           name: tmp-dir-argo
+#           subPath: "0"
+#         - mountPath: /var/run/argo
+#           name: var-run-argo
+#         - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#           name: kube-api-access-92n2l
+#           readOnly: true
+#     - args:
+#         - cat /tmp/message
+#       command:
+#         - /var/run/argo/argoexec
+#         - emissary
+#         - --loglevel
+#         - info
+#         - --log-format
+#         - text
+#         - --
+#         - sh
+#         - -c
+#       env:
+#         - name: ARGO_CONTAINER_NAME
+#           value: main
+#         - name: ARGO_TEMPLATE
+#           value:
+#             # {
+#             #     "name":"print-message",
+#             #     "inputs":{
+#             #         "artifacts":[
+#             #             {
+#             #                 "name":"message",
+#             #                 "path":"/tmp/message",
+#             #                 "s3":{"
+#             #                     key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897/hello-art.tgz"
+#             #                 }
+#             #             }
+#             #         ]
+#             #     },
+#             #     "outputs":{},
+#             #     "metadata":{},
+#             #     "container":{
+#             #         "name":"",
+#             #         "image":"alpine:latest",
+#             #         "command":["sh","-c"],
+#             #         "args":["cat /tmp/message"],
+#             #         "resources":{}
+#             #     },
+#             #     "archiveLocation":{
+#             #         "archiveLogs":true,
+#             #         "s3":{
+#             #             "endpoint":"minio:9000",
+#             #             "bucket":"my-bucket",
+#             #             "insecure":true,
+#             #             "accessKeySecret":{
+#             #                 "name":"my-minio-cred",
+#             #                 "key":"accesskey"
+#             #             },
+#             #             "secretKeySecret":{
+#             #                 "name":"my-minio-cred",
+#             #                 "key":"secretkey"
+#             #             },
+#             #             "key":"artifact-passing-d8khj/artifact-passing-d8khj-print-message-3278273695"
+#             #         }
+#             #     }
+#             # }
+#             '{"name":"print-message","inputs":{"artifacts":[{"name":"message","path":"/tmp/message","s3":{"key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897/hello-art.tgz"}}]},"outputs":{},"metadata":{},"container":{"name":"","image":"alpine:latest","command":["sh","-c"],"args":["cat
+#             /tmp/message"],"resources":{}},"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"minio:9000","bucket":"my-bucket","insecure":true,"accessKeySecret":{"name":"my-minio-cred","key":"accesskey"},"secretKeySecret":{"name":"my-minio-cred","key":"secretkey"},"key":"artifact-passing-d8khj/artifact-passing-d8khj-print-message-3278273695"}}}'
+#         - name: ARGO_NODE_ID
+#           value: artifact-passing-d8khj-3278273695
+#         - name: ARGO_INCLUDE_SCRIPT_OUTPUT
+#           value: "false"
+#         - name: ARGO_DEADLINE
+#           value: "0001-01-01T00:00:00Z"
+#         - name: ARGO_PROGRESS_FILE
+#           value: /var/run/argo/progress
+#         - name: ARGO_PROGRESS_PATCH_TICK_DURATION
+#           value: 1m0s
+#         - name: ARGO_PROGRESS_FILE_TICK_DURATION
+#           value: 3s
+#       image: alpine:latest
+#       imagePullPolicy: Always
+#       name: main
+#       resources: {}
+#       terminationMessagePath: /dev/termination-log
+#       terminationMessagePolicy: File
+#       volumeMounts:
+#         - mountPath: /tmp/message
+#           name: input-artifacts
+#           subPath: message
+#         - mountPath: /var/run/argo
+#           name: var-run-argo
+#         - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#           name: kube-api-access-92n2l
+#           readOnly: true
+#   dnsPolicy: ClusterFirst
+#   enableServiceLinks: true
+#   initContainers:
+#     - command:
+#         - argoexec
+#         - init
+#         - --loglevel
+#         - info
+#         - --log-format
+#         - text
+#       env:
+#         - name: ARGO_POD_NAME
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.name
+#         - name: ARGO_POD_UID
+#           valueFrom:
+#             fieldRef:
+#               apiVersion: v1
+#               fieldPath: metadata.uid
+#         - name: GODEBUG
+#           value: x509ignoreCN=0
+#         - name: ARGO_WORKFLOW_NAME
+#           value: artifact-passing-d8khj
+#         - name: ARGO_WORKFLOW_UID
+#           value: 4945a5dc-36e3-4a84-a86f-d31a94228c21
+#         - name: ARGO_CONTAINER_NAME
+#           value: init
+#         - name: ARGO_TEMPLATE
+#           value:
+#             # {
+#             #     "name":"print-message",
+#             #     "inputs":{
+#             #         "artifacts":[
+#             #             {
+#             #                 "name":"message",
+#             #                 "path":"/tmp/message",
+#             #                 "s3":{"
+#             #                     key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897/hello-art.tgz"
+#             #                 }
+#             #             }
+#             #         ]
+#             #     },
+#             #     "outputs":{},
+#             #     "metadata":{},
+#             #     "container":{
+#             #         "name":"",
+#             #         "image":"alpine:latest",
+#             #         "command":["sh","-c"],
+#             #         "args":["cat /tmp/message"],
+#             #         "resources":{}
+#             #     },
+#             #     "archiveLocation":{
+#             #         "archiveLogs":true,
+#             #         "s3":{
+#             #             "endpoint":"minio:9000",
+#             #             "bucket":"my-bucket",
+#             #             "insecure":true,
+#             #             "accessKeySecret":{
+#             #                 "name":"my-minio-cred",
+#             #                 "key":"accesskey"
+#             #             },
+#             #             "secretKeySecret":{
+#             #                 "name":"my-minio-cred",
+#             #                 "key":"secretkey"
+#             #             },
+#             #             "key":"artifact-passing-d8khj/artifact-passing-d8khj-print-message-3278273695"
+#             #         }
+#             #     }
+#             # }
+#             '{"name":"print-message","inputs":{"artifacts":[{"name":"message","path":"/tmp/message","s3":{"key":"artifact-passing-d8khj/artifact-passing-d8khj-whalesay-3762573897/hello-art.tgz"}}]},"outputs":{},"metadata":{},"container":{"name":"","image":"alpine:latest","command":["sh","-c"],"args":["cat
+#             /tmp/message"],"resources":{}},"archiveLocation":{"archiveLogs":true,"s3":{"endpoint":"minio:9000","bucket":"my-bucket","insecure":true,"accessKeySecret":{"name":"my-minio-cred","key":"accesskey"},"secretKeySecret":{"name":"my-minio-cred","key":"secretkey"},"key":"artifact-passing-d8khj/artifact-passing-d8khj-print-message-3278273695"}}}'
+#         - name: ARGO_NODE_ID
+#           value: artifact-passing-d8khj-3278273695
+#         - name: ARGO_INCLUDE_SCRIPT_OUTPUT
+#           value: "false"
+#         - name: ARGO_DEADLINE
+#           value: "0001-01-01T00:00:00Z"
+#         - name: ARGO_PROGRESS_FILE
+#           value: /var/run/argo/progress
+#         - name: ARGO_PROGRESS_PATCH_TICK_DURATION
+#           value: 1m0s
+#         - name: ARGO_PROGRESS_FILE_TICK_DURATION
+#           value: 3s
+#       image: quay.io/argoproj/argoexec:v3.5.7
+#       imagePullPolicy: IfNotPresent
+#       name: init
+#       resources:
+#         requests:
+#           cpu: 10m
+#           memory: 64Mi
+#       terminationMessagePath: /dev/termination-log
+#       terminationMessagePolicy: File
+#       volumeMounts:
+#         - mountPath: /argo/secret/my-minio-cred
+#           name: my-minio-cred
+#           readOnly: true
+#         - mountPath: /argo/inputs/artifacts
+#           name: input-artifacts
+#         - mountPath: /var/run/argo
+#           name: var-run-argo
+#         - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#           name: kube-api-access-92n2l
+#           readOnly: true
+#   nodeName: 192.168.137.184
+#   preemptionPolicy: PreemptLowerPriority
+#   priority: 0
+#   restartPolicy: Never
+#   schedulerName: default-scheduler
+#   securityContext: {}
+#   serviceAccount: default
+#   serviceAccountName: default
+#   terminationGracePeriodSeconds: 30
+#   tolerations:
+#     - effect: NoExecute
+#       key: node.kubernetes.io/not-ready
+#       operator: Exists
+#       tolerationSeconds: 30
+#     - effect: NoExecute
+#       key: node.kubernetes.io/unreachable
+#       operator: Exists
+#       tolerationSeconds: 30
+#   volumes:
+#     - emptyDir: {}
+#       name: var-run-argo
+#     - emptyDir: {}
+#       name: tmp-dir-argo
+#     - name: my-minio-cred
+#       secret:
+#         defaultMode: 420
+#         items:
+#           - key: accesskey
+#             path: accesskey
+#           - key: secretkey
+#             path: secretkey
+#         secretName: my-minio-cred
+#     - emptyDir: {}
+#       name: input-artifacts
+#     - name: kube-api-access-92n2l
+#       projected:
+#         defaultMode: 420
+#         sources:
+#           - serviceAccountToken:
+#               expirationSeconds: 3607
+#               path: token
+#           - configMap:
+#               items:
+#                 - key: ca.crt
+#                   path: ca.crt
+#               name: kube-root-ca.crt
+#           - downwardAPI:
+#               items:
+#                 - fieldRef:
+#                     apiVersion: v1
+#                     fieldPath: metadata.namespace
+#                   path: namespace
